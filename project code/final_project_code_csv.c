@@ -1,24 +1,23 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#define EMPLOYEE_FILE  "employees.csv"
-#define  ATTENDANCE_FILE "attendance.csv"
-#define LOGIN_FILE  "login.csv"
-#define ENC_KEY 'K' // change the naming pattern into something meaningfull
+#define EMPLOYEE_FILE   "employees.dat"
+#define ATTENDANCE_FILE "attendance.dat"
+#define LOGIN_FILE      "login.dat"
+#define ENC_KEY         'K'
 #define MAX_DEPARTMENTS 20
 
 typedef struct {
     int id;
-  char name[50]; // check all the indentation and spacing in the code
-   char gender[10];
+    char name[50];
+    char gender[10];
     int age;
     char phone[15];
     char department[30];
     char designation[30];
     char joiningDate[15];
-    float basicSalary; // why different kind of casing pattern? use only one for entire project
+    float basicSalary;
 } Employee;
 
 typedef struct {
@@ -371,7 +370,7 @@ void updateEmployee(void) {
     clearInputBuffer();
 
     FILE *file = fopen(EMPLOYEE_FILE, "r");
-    FILE *temp = fopen("temp.csv", "w");
+    FILE *temp = fopen("temp.dat", "w");
     if (file == NULL || temp == NULL) {
         printf("Error: Unable to open employee file\n");
         if (file) fclose(file);
@@ -418,7 +417,7 @@ void updateEmployee(void) {
     fclose(temp);
 
     remove(EMPLOYEE_FILE);
-    rename("temp.csv", EMPLOYEE_FILE);
+    rename("temp.dat", EMPLOYEE_FILE);
 
     if (found) {
         printf("Employee updated successfully\n");
@@ -446,7 +445,7 @@ void deleteEmployee(void) {
     }
 
     FILE *file = fopen(EMPLOYEE_FILE, "r");
-    FILE *temp = fopen("temp.csv", "w");
+    FILE *temp = fopen("temp.dat", "w");
     if (file == NULL || temp == NULL) {
         printf("Error: Unable to open employee file\n");
         if (file) fclose(file);
@@ -469,7 +468,7 @@ void deleteEmployee(void) {
     fclose(temp);
 
     remove(EMPLOYEE_FILE);
-    rename("temp.csv", EMPLOYEE_FILE);
+    rename("temp.dat", EMPLOYEE_FILE);
 
     if (found) {
         printf("Employee deleted successfully\n");
