@@ -1,56 +1,27 @@
-/*
-    ============================================================
-    EMPLOYEE MANAGEMENT SYSTEM (Beginner Friendly C Program)
-    ============================================================
-    Features:
-    1. Department Management
-       - Add Department
-       - View Employees by Department
-    2. Employee Management
-       - Add Employee (with Department assign)
-       - View All Employees
-       - View All Departments
-    3. Auto CSV Export
-       - Every time you Add Department or Add Employee,
-         the program automatically saves data into:
-         departments.csv
-         employees.csv
-
-    Author: Written for beginners - easy to read & understand
-    ============================================================
-*/
-
 #include <stdio.h>
 #include <string.h>
 
-// ---------------- Constants (fixed max size, simple approach) ----------------
-#define MAX_DEPT 50     // Maximum number of departments allowed
-#define MAX_EMP  200    // Maximum number of employees allowed
+#define MAX_DEPT 50
+#define MAX_EMP  200
 
-// ---------------- Structures (Blueprint of Data) ----------------
-
-// Department structure
 struct Department {
     int id;
     char name[50];
 };
 
-// Employee structure
 struct Employee {
     int id;
     char name[50];
     float salary;
-    int dept_id;   // Which department this employee belongs to
+    int dept_id;
 };
 
-// ---------------- Global Arrays (our simple "database") ----------------
 struct Department departments[MAX_DEPT];
-int deptCount = 0;   // How many departments added so far
+int deptCount = 0;
 
 struct Employee employees[MAX_EMP];
-int empCount = 0;    // How many employees added so far
+int empCount = 0;
 
-// ---------------- Function Prototypes (declared before main) ----------------
 void addDepartment();
 void addEmployee();
 void viewAllDepartments();
@@ -61,9 +32,6 @@ void saveDepartmentsToCSV();
 void saveEmployeesToCSV();
 void showMenu();
 
-// ================================================================
-// MAIN FUNCTION - Program starts here
-// ================================================================
 int main() {
     int choice;
 
@@ -75,10 +43,8 @@ int main() {
         showMenu();
         printf("Enter your choice: ");
 
-        // Input validation: if user types a letter instead of number
         if (scanf("%d", &choice) != 1) {
             printf("\n[Error] Please enter a valid number!\n\n");
-            // Clear wrong input from buffer
             while (getchar() != '\n');
             continue;
         }
@@ -102,7 +68,7 @@ int main() {
             case 6:
                 printf("\nThank you for using Employee Management System!\n");
                 printf("Your data is saved in departments.csv and employees.csv\n");
-                return 0; // Exit program
+                return 0;
             default:
                 printf("\n[Error] Invalid choice! Please select from menu.\n\n");
         }
@@ -111,9 +77,6 @@ int main() {
     return 0;
 }
 
-// ================================================================
-// Show Menu Options
-// ================================================================
 void showMenu() {
     printf("\n---------------------- MENU -------------------------\n");
     printf("1. Add Department\n");
@@ -125,9 +88,6 @@ void showMenu() {
     printf("-------------------------------------------------------\n");
 }
 
-// ================================================================
-// 1. Add Department
-// ================================================================
 void addDepartment() {
     if (deptCount >= MAX_DEPT) {
         printf("\n[Error] Department list is full! Cannot add more.\n");
@@ -136,25 +96,20 @@ void addDepartment() {
 
     struct Department newDept;
 
-    // Auto-generate Department ID (1, 2, 3, ...)
     newDept.id = deptCount + 1;
 
     printf("\n--- Add New Department ---\n");
     printf("Enter Department Name: ");
-    scanf(" %[^\n]", newDept.name);   // Reads full name including spaces
+    scanf(" %[^\n]", newDept.name);
 
     departments[deptCount] = newDept;
     deptCount++;
 
     printf("\n[Success] Department '%s' added with ID: %d\n", newDept.name, newDept.id);
 
-    // Auto save to CSV after adding
     saveDepartmentsToCSV();
 }
 
-// ================================================================
-// 2. Add Employee
-// ================================================================
 void addEmployee() {
     if (empCount >= MAX_EMP) {
         printf("\n[Error] Employee list is full! Cannot add more.\n");
@@ -167,7 +122,7 @@ void addEmployee() {
     }
 
     struct Employee newEmp;
-    newEmp.id = empCount + 1;   // Auto-generate Employee ID
+    newEmp.id = empCount + 1;
 
     printf("\n--- Add New Employee ---\n");
     printf("Enter Employee Name: ");
@@ -176,7 +131,6 @@ void addEmployee() {
     printf("Enter Employee Salary: ");
     scanf("%f", &newEmp.salary);
 
-    // Show department list so user can pick correct one
     printf("\nAvailable Departments:\n");
     viewAllDepartments();
 
@@ -184,7 +138,6 @@ void addEmployee() {
     printf("Enter Department ID for this Employee: ");
     scanf("%d", &dept_id);
 
-    // Validate department id
     if (findDepartmentIndexById(dept_id) == -1) {
         printf("\n[Error] Invalid Department ID! Employee not added.\n");
         return;
@@ -197,14 +150,9 @@ void addEmployee() {
 
     printf("\n[Success] Employee '%s' added with ID: %d\n", newEmp.name, newEmp.id);
 
-    // Auto save to CSV after adding
     saveEmployeesToCSV();
 }
 
-// ================================================================
-// Helper Function: Find department array index using dept_id
-// Returns -1 if not found
-// ================================================================
 int findDepartmentIndexById(int dept_id) {
     for (int i = 0; i < deptCount; i++) {
         if (departments[i].id == dept_id) {
@@ -214,9 +162,6 @@ int findDepartmentIndexById(int dept_id) {
     return -1;
 }
 
-// ================================================================
-// 3. View All Departments
-// ================================================================
 void viewAllDepartments() {
     if (deptCount == 0) {
         printf("\nNo departments added yet.\n");
@@ -230,9 +175,6 @@ void viewAllDepartments() {
     }
 }
 
-// ================================================================
-// 4. View Employees by Department (Main Required Feature)
-// ================================================================
 void viewEmployeesByDepartment() {
     if (deptCount == 0) {
         printf("\nNo departments added yet.\n");
@@ -269,9 +211,6 @@ void viewEmployeesByDepartment() {
     }
 }
 
-// ================================================================
-// 5. View All Employees
-// ================================================================
 void viewAllEmployees() {
     if (empCount == 0) {
         printf("\nNo employees added yet.\n");
@@ -294,9 +233,6 @@ void viewAllEmployees() {
     }
 }
 
-// ================================================================
-// Auto CSV Export: Departments
-// ================================================================
 void saveDepartmentsToCSV() {
     FILE *fp = fopen("departments.csv", "w");
 
@@ -305,10 +241,8 @@ void saveDepartmentsToCSV() {
         return;
     }
 
-    // Header row
     fprintf(fp, "ID,DepartmentName\n");
 
-    // Data rows
     for (int i = 0; i < deptCount; i++) {
         fprintf(fp, "%d,%s\n", departments[i].id, departments[i].name);
     }
@@ -316,9 +250,6 @@ void saveDepartmentsToCSV() {
     fclose(fp);
 }
 
-// ================================================================
-// Auto CSV Export: Employees
-// ================================================================
 void saveEmployeesToCSV() {
     FILE *fp = fopen("employees.csv", "w");
 
@@ -327,10 +258,8 @@ void saveEmployeesToCSV() {
         return;
     }
 
-    // Header row
     fprintf(fp, "ID,Name,Salary,DepartmentID,DepartmentName\n");
 
-    // Data rows
     for (int i = 0; i < empCount; i++) {
         int dIndex = findDepartmentIndexById(employees[i].dept_id);
         char deptName[50] = "Unknown";
